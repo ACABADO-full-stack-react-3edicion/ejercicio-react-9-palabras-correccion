@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useFormulario } from "../hooks/useFormulario";
 
 export const Formulario = (props) => {
   const { anyadirPalabraOrigen } = props;
@@ -7,16 +8,14 @@ export const Formulario = (props) => {
     maximo: "",
     esLenguaje: false,
   };
-  const [formularioValido, setFormularioValido] = useState(false);
-  const [datosFormulario, setDatosFormulario] = useState(datosIniciales);
-  const setDato = (e) => {
-    const elemento = e.target;
-    setDatosFormulario({
-      ...datosFormulario,
-      [elemento.id]:
-        elemento.type === "checkbox" ? elemento.checked : elemento.value,
-    });
-  };
+
+  const {
+    datos: datosFormulario,
+    formularioValido,
+    setDato,
+    setFormularioValido,
+    resetFormulario,
+  } = useFormulario(datosIniciales);
   const enviarPalabra = (e) => {
     e.preventDefault();
     anyadirPalabraOrigen({
@@ -30,10 +29,8 @@ export const Formulario = (props) => {
     setFormularioValido(
       datosFormulario.texto !== "" && datosFormulario.maximo !== ""
     );
-  }, [datosFormulario]);
-  const resetFormulario = () => {
-    setDatosFormulario(datosIniciales);
-  };
+  }, [datosFormulario, setFormularioValido]);
+
   return (
     <form className="form-palabras" noValidate onSubmit={enviarPalabra}>
       <div className="form-grupo">
